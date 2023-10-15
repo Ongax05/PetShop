@@ -11,7 +11,17 @@ namespace API.Profiles
     public class MappingProfile : Profile
     {
         public MappingProfile (){
-            //CreateMap<Sale,SaleDto>().ReverseMap();
+            CreateMap<Appointment,AppointmentDto>().ReverseMap();
+            CreateMap<Breed,BreedDto>().ReverseMap();
+            CreateMap<MedicalTreatment,MedicalTreatmentDto>().ReverseMap();
+            CreateMap<Medicine,MedicineDto>().ReverseMap();
+            CreateMap<Owner,OwnerDto>().ReverseMap();
+            CreateMap<Pet,PetDto>().ReverseMap();
+            CreateMap<PurchasedMedicine,PurchasedMedicineDto>().ReverseMap();
+            CreateMap<SoldMedicine,SoldMedicineDto>().ReverseMap();
+            CreateMap<Species,SpeciesDto>().ReverseMap();
+            CreateMap<Supplier,SupplierDto>().ReverseMap();
+            CreateMap<Veterinarian,VeterinarianDto>().ReverseMap();
         }
     }
 }
