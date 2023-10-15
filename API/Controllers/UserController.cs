@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos;
 using API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class UserController : ApiBaseController
 {
     private readonly IUserService _userService;
