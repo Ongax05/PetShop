@@ -1,0 +1,189 @@
+[2023-10-14 20:09:01.851 -05:00 INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE DATABASE `PetShop`;
+[2023-10-14 20:09:01.990 -05:00 INF] Executed DbCommand (52ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `__EFMigrationsHistory` (
+    `MigrationId` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+    `ProductVersion` varchar(32) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK___EFMigrationsHistory` PRIMARY KEY (`MigrationId`)
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.023 -05:00 INF] Executed DbCommand (22ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PetShop' AND TABLE_NAME='__EFMigrationsHistory';
+[2023-10-14 20:09:02.035 -05:00 INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+[2023-10-14 20:09:02.052 -05:00 INF] Applying migration '20231014174238_InitialMigration'.
+[2023-10-14 20:09:02.080 -05:00 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER DATABASE CHARACTER SET utf8mb4;
+[2023-10-14 20:09:02.088 -05:00 INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `rol` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `rolName` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_rol` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.096 -05:00 INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `user` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `username` varchar(50) CHARACTER SET utf8mb4 NULL,
+    `email` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+    `password` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_user` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.108 -05:00 INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `RefreshToken` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `UserId` int NOT NULL,
+    `Token` longtext CHARACTER SET utf8mb4 NULL,
+    `Expires` datetime(6) NOT NULL,
+    `Created` datetime(6) NOT NULL,
+    `Revoked` datetime(6) NULL,
+    CONSTRAINT `PK_RefreshToken` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_RefreshToken_user_UserId` FOREIGN KEY (`UserId`) REFERENCES `user` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.120 -05:00 INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `userRol` (
+    `UserId` int NOT NULL,
+    `RolId` int NOT NULL,
+    CONSTRAINT `PK_userRol` PRIMARY KEY (`UserId`, `RolId`),
+    CONSTRAINT `FK_userRol_rol_RolId` FOREIGN KEY (`RolId`) REFERENCES `rol` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_userRol_user_UserId` FOREIGN KEY (`UserId`) REFERENCES `user` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.133 -05:00 INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_RefreshToken_UserId` ON `RefreshToken` (`UserId`);
+[2023-10-14 20:09:02.140 -05:00 INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_userRol_RolId` ON `userRol` (`RolId`);
+[2023-10-14 20:09:02.143 -05:00 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20231014174238_InitialMigration', '7.0.10');
+[2023-10-14 20:09:02.144 -05:00 INF] Applying migration '20231015010844_InitialMigrate'.
+[2023-10-14 20:09:02.178 -05:00 INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `Owner` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Name` varchar(70) CHARACTER SET utf8mb4 NOT NULL,
+    `Telephone` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+    `Email` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_Owner` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.185 -05:00 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `Species` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Name` varchar(80) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_Species` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.192 -05:00 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `Supplier` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Name` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+    `Address` varchar(200) CHARACTER SET utf8mb4 NOT NULL,
+    `Telephone` varchar(200) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_Supplier` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.200 -05:00 INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `Veterinarian` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Name` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+    `Email` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+    `Telephone` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+    `Speciality` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_Veterinarian` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.213 -05:00 INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `Breed` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `SpeciesId` int NOT NULL,
+    `Name` varchar(70) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_Breed` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Breed_Species_SpeciesId` FOREIGN KEY (`SpeciesId`) REFERENCES `Species` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.224 -05:00 INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `Medicine` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `SupplierId` int NOT NULL,
+    `Name` varchar(110) CHARACTER SET utf8mb4 NOT NULL,
+    `stock` int NOT NULL,
+    `Price` double    NOT NULL,
+    `Laboratory` varchar(110) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_Medicine` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Medicine_Supplier_SupplierId` FOREIGN KEY (`SupplierId`) REFERENCES `Supplier` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.240 -05:00 INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `Pet` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `OwnerId` int NOT NULL,
+    `BreedId` int NOT NULL,
+    `Name` varchar(120) CHARACTER SET utf8mb4 NOT NULL,
+    `BirthDate` datetime NOT NULL,
+    CONSTRAINT `PK_Pet` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Pet_Breed_BreedId` FOREIGN KEY (`BreedId`) REFERENCES `Breed` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_Pet_Owner_OwnerId` FOREIGN KEY (`OwnerId`) REFERENCES `Owner` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.253 -05:00 INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `PurchasedMedicines` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `SupplierId` int NOT NULL,
+    `MedicineId` int NOT NULL,
+    `Amount` int NOT NULL,
+    `Price` double NOT NULL,
+    `PurchaseDate` datetime NOT NULL,
+    CONSTRAINT `PK_PurchasedMedicines` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_PurchasedMedicines_Medicine_MedicineId` FOREIGN KEY (`MedicineId`) REFERENCES `Medicine` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_PurchasedMedicines_Supplier_SupplierId` FOREIGN KEY (`SupplierId`) REFERENCES `Supplier` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.264 -05:00 INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `SoldMedicine` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `MedicineId` int NOT NULL,
+    `Amount` int NOT NULL,
+    `Price` double NOT NULL,
+    `SoldDate` datetime NOT NULL,
+    CONSTRAINT `PK_SoldMedicine` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_SoldMedicine_Medicine_MedicineId` FOREIGN KEY (`MedicineId`) REFERENCES `Medicine` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.280 -05:00 INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `Appointment` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `PetId` int NOT NULL,
+    `VeterinarianId` int NOT NULL,
+    `Date` datetime NOT NULL,
+    `Reason` varchar(500) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_Appointment` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Appointment_Pet_PetId` FOREIGN KEY (`PetId`) REFERENCES `Pet` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_Appointment_Veterinarian_VeterinarianId` FOREIGN KEY (`VeterinarianId`) REFERENCES `Veterinarian` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.295 -05:00 INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE `MedicalTreatment` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `AppointmentId` int NOT NULL,
+    `MedicineId` int NOT NULL,
+    `Dosage` int NOT NULL,
+    `AdministrationDate` datetime NOT NULL,
+    `comment` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+    CONSTRAINT `PK_MedicalTreatment` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_MedicalTreatment_Appointment_AppointmentId` FOREIGN KEY (`AppointmentId`) REFERENCES `Appointment` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_MedicalTreatment_Medicine_MedicineId` FOREIGN KEY (`MedicineId`) REFERENCES `Medicine` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+[2023-10-14 20:09:02.316 -05:00 INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_Appointment_PetId` ON `Appointment` (`PetId`);
+[2023-10-14 20:09:02.329 -05:00 INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_Appointment_VeterinarianId` ON `Appointment` (`VeterinarianId`);
+[2023-10-14 20:09:02.344 -05:00 INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_Breed_SpeciesId` ON `Breed` (`SpeciesId`);
+[2023-10-14 20:09:02.357 -05:00 INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_MedicalTreatment_AppointmentId` ON `MedicalTreatment` (`AppointmentId`);
+[2023-10-14 20:09:02.363 -05:00 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_MedicalTreatment_MedicineId` ON `MedicalTreatment` (`MedicineId`);
+[2023-10-14 20:09:02.375 -05:00 INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_Medicine_SupplierId` ON `Medicine` (`SupplierId`);
+[2023-10-14 20:09:02.390 -05:00 INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_Pet_BreedId` ON `Pet` (`BreedId`);
+[2023-10-14 20:09:02.402 -05:00 INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_Pet_OwnerId` ON `Pet` (`OwnerId`);
+[2023-10-14 20:09:02.425 -05:00 INF] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_PurchasedMedicines_MedicineId` ON `PurchasedMedicines` (`MedicineId`);
+[2023-10-14 20:09:02.446 -05:00 INF] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_PurchasedMedicines_SupplierId` ON `PurchasedMedicines` (`SupplierId`);
+[2023-10-14 20:09:02.461 -05:00 INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_SoldMedicine_MedicineId` ON `SoldMedicine` (`MedicineId`);
+[2023-10-14 20:09:02.463 -05:00 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20231015010844_InitialMigrate', '7.0.10');
