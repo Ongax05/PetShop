@@ -16,7 +16,9 @@ namespace API.Profiles
             CreateMap<MedicalTreatment,MedicalTreatmentDto>().ReverseMap();
             CreateMap<Medicine,MedicineDto>().ReverseMap();
             CreateMap<Owner,OwnerDto>().ReverseMap();
+            CreateMap<Owner,OwnerWithPetsDto>().ReverseMap();
             CreateMap<Pet,PetDto>().ReverseMap();
+            CreateMap<Pet,PetWithOwnerDto>().ReverseMap();
             CreateMap<PurchasedMedicine,PurchasedMedicineDto>().ReverseMap();
             CreateMap<SoldMedicine,SoldMedicineDto>().ReverseMap();
             CreateMap<Species,SpeciesDto>().ReverseMap();

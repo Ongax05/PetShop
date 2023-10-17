@@ -5,6 +5,7 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -86,6 +87,102 @@ namespace API.Controllers
             _unitOfWork.Pet.Remove(Pet);
             await _unitOfWork.SaveAsync();
             return NoContent();
+        }
+        [HttpGet("species")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<PetDto>>> Get(
+            [FromQuery] Params PetParams,
+            string Species
+        )
+        {
+            if (PetParams == null || Species == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params or species cannot be null"));
+            }
+            var (registers,totalRegisters) = await _unitOfWork.Pet.GetPetsBySpecies(
+                PetParams.PageIndex,
+                PetParams.PageSize,
+                Species
+            );
+            var PetListDto = _mapper.Map<List<PetDto>>(registers);
+            return new Pager<PetDto>(
+                PetListDto,
+                totalRegisters,
+                PetParams.PageIndex,
+                PetParams.PageSize
+            );
+        }
+        [HttpGet("appointmentReason")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<PetDto>>> GetByReason(
+            [FromQuery] Params PetParams,
+            string Reason
+        )
+        {
+            if (PetParams == null || Reason == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params or appointmentReason cannot be null"));
+            }
+            var (registers,totalRegisters) = await _unitOfWork.Pet.GetPetsByAppointmentReason(
+                PetParams.PageIndex,
+                PetParams.PageSize,
+                Reason
+            );
+            var PetListDto = _mapper.Map<List<PetDto>>(registers);
+            return new Pager<PetDto>(
+                PetListDto,
+                totalRegisters,
+                PetParams.PageIndex,
+                PetParams.PageSize
+            );
+        }
+        [HttpGet("veterinarian")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<PetDto>>> GetByVeterinarian(
+            [FromQuery] Params PetParams,
+            string VeterinarianName
+        )
+        {
+            if (PetParams == null || VeterinarianName == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params or Veterinarian cannot be null"));
+            }
+            var (registers,totalRegisters) = await _unitOfWork.Pet.GetPetsByVeterinarian(
+                PetParams.PageIndex,
+                PetParams.PageSize,
+                VeterinarianName
+            );
+            var PetListDto = _mapper.Map<List<PetDto>>(registers);
+            return new Pager<PetDto>(
+                PetListDto,
+                totalRegisters,
+                PetParams.PageIndex,
+                PetParams.PageSize
+            );
+        }
+        [HttpGet("breed")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<PetWithOwnerDto>>> GetByBreed(
+            [FromQuery] Params PetParams,
+            string Breed
+        )
+        {
+            if (PetParams == null || Breed == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params or Breed cannot be null"));
+            }
+            var (registers,totalRegisters) = await _unitOfWork.Pet.GetPetsByBreed(
+                PetParams.PageIndex,
+                PetParams.PageSize,
+                Breed
+            );
+            var PetListDto = _mapper.Map<List<PetWithOwnerDto>>(registers);
+            return new Pager<PetWithOwnerDto>(
+                PetListDto,
+                totalRegisters,
+                PetParams.PageIndex,
+                PetParams.PageSize
+            );
         }
     }
 }

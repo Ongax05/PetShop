@@ -87,5 +87,29 @@ namespace API.Controllers
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
+        [HttpGet("speciality")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<VeterinarianDto>>> Get(
+            [FromQuery] Params VeterinarianParams,
+            string speciality
+        )
+        {
+            if (VeterinarianParams == null || speciality == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params or speciality cannot be null"));
+            }
+            var (registers,totalRegisters) = await _unitOfWork.Veterinarian.GetVeterinariansBySpeciality(
+                VeterinarianParams.PageIndex,
+                VeterinarianParams.PageSize,
+                speciality
+            );
+            var VeterinarianListDto = _mapper.Map<List<VeterinarianDto>>(registers);
+            return new Pager<VeterinarianDto>(
+                VeterinarianListDto,
+                totalRegisters,
+                VeterinarianParams.PageIndex,
+                VeterinarianParams.PageSize
+            );
+        }
     }
 }

@@ -51,6 +51,7 @@ namespace API.Controllers
             {
                 return BadRequest(new ApiResponse(400, "Object cannot be null"));
             }
+            await _unitOfWork.Medicine.RestMedicine(SoldMedicineDto.MedicineId,SoldMedicineDto.Amount);
             _unitOfWork.SoldMedicine.Add(SoldMedicine);
             await _unitOfWork.SaveAsync();
             SoldMedicineDto.Id = SoldMedicine.Id;

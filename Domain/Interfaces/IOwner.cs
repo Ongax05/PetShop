@@ -8,6 +8,6 @@ namespace Domain.Interfaces
 {
     public interface IOwner : IGenericRepository<Owner>
     {
-        
+        Task<(IEnumerable<Owner> owners,int total)> OwnerWithPets (int pageIndex, int pageSize);
     }
 }

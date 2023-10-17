@@ -87,5 +87,51 @@ namespace API.Controllers
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
+        [HttpGet("laboratory")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<MedicineDto>>> Get(
+            [FromQuery] Params MedicineParams,
+            string laboratory
+        )
+        {
+            if (MedicineParams == null || laboratory == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params or laboratory cannot be null"));
+            }
+            var (registers,totalRegisters) = await _unitOfWork.Medicine.GetMedicinesByLaboratory(
+                MedicineParams.PageIndex,
+                MedicineParams.PageSize,
+                laboratory
+            );
+            var MedicineListDto = _mapper.Map<List<MedicineDto>>(registers);
+            return new Pager<MedicineDto>(
+                MedicineListDto,
+                totalRegisters,
+                MedicineParams.PageIndex,
+                MedicineParams.PageSize
+            );
+        }
+        [HttpGet("ExpensiveThan50k")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<MedicineDto>>> GetMt(
+            [FromQuery] Params MedicineParams
+        )
+        {
+            if (MedicineParams == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params cannot be null"));
+            }
+            var (registers, totalRegisters) = await _unitOfWork.Medicine.GetMedicinesExpensiveThan(
+                MedicineParams.PageIndex,
+                MedicineParams.PageSize
+            );
+            var MedicineListDto = _mapper.Map<List<MedicineDto>>(registers);
+            return new Pager<MedicineDto>(
+                MedicineListDto,
+                totalRegisters,
+                MedicineParams.PageIndex,
+                MedicineParams.PageSize
+            );
+        }
     }
 }

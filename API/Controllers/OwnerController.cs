@@ -87,5 +87,27 @@ namespace API.Controllers
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
+        [HttpGet("OwnerWithPets")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<OwnerWithPetsDto>>> GetWithPets(
+            [FromQuery] Params OwnerParams
+        )
+        {
+            if (OwnerParams == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params cannot be null"));
+            }
+            var (totalRegisters, registers) = await _unitOfWork.Owner.OwnerWithPets(
+                OwnerParams.PageIndex,
+                OwnerParams.PageSize
+            );
+            var OwnerListDto = _mapper.Map<List<OwnerWithPetsDto>>(totalRegisters);
+            return new Pager<OwnerWithPetsDto>(
+                OwnerListDto,
+                registers,
+                OwnerParams.PageIndex,
+                OwnerParams.PageSize
+            );
+        }
     }
 }

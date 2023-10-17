@@ -8,6 +8,6 @@ namespace Domain.Interfaces
 {
     public interface ISupplier : IGenericRepository<Supplier>
     {
-        
+        Task<(IEnumerable<Supplier> suppliers, int totals)> GetWhoShells (int pageIndex, int pageSize,string medicineName);
     }
 }

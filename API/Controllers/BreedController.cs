@@ -91,5 +91,36 @@ namespace API.Controllers
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
+        [HttpGet("BreedWithPets")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<BreedWithHowManyPetsDto>>> GetWP(
+            [FromQuery] Params BreedParams
+        )
+        {
+            if (BreedParams == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params cannot be null"));
+            }
+            var (totalRegisters, registers) = await _unitOfWork.Breed.GetHowManyPetsAreInTheBreed(
+                BreedParams.PageIndex,
+                BreedParams.PageSize
+            );
+            List<BreedWithHowManyPetsDto> Fregisters = new ();
+            foreach (var r in totalRegisters){  
+                var bw = new BreedWithHowManyPetsDto
+                    {
+                        Breed = _mapper.Map<BreedDto>(r),
+                        PetIds = r.Pets.Select(p=>p.Id),
+                        Total = r.Pets.Select(p=>p.Id).Count()
+                    };
+                    Fregisters.Add(bw);
+            }
+            return new Pager<BreedWithHowManyPetsDto>(
+                Fregisters,
+                registers,
+                BreedParams.PageIndex,
+                BreedParams.PageSize
+            );
+        }
     }
 }

@@ -8,6 +8,6 @@ namespace Domain.Interfaces
 {
     public interface IBreed:IGenericRepository<Breed>
     {
-        
+        Task<(IEnumerable<Breed>BreedWithHowManyPets,int Total)> GetHowManyPetsAreInTheBreed(int pageIndex, int pageSize);
     }
 }

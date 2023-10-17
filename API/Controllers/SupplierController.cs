@@ -86,5 +86,29 @@ namespace API.Controllers
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
+        [HttpGet("WhoShells")]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<Pager<SupplierDto>>> GetWhoShells(
+            [FromQuery] Params SupplierParams,
+            string medicineName
+        )
+        {
+            if (SupplierParams == null)
+            {
+                return BadRequest(new ApiResponse(400, "Params cannot be null"));
+            }
+            var (registers, totalRegisters) = await _unitOfWork.Supplier.GetWhoShells(
+                SupplierParams.PageIndex,
+                SupplierParams.PageSize,
+                medicineName
+            );
+            var SupplierListDto = _mapper.Map<List<SupplierDto>>(registers);
+            return new Pager<SupplierDto>(
+                SupplierListDto,
+                totalRegisters,
+                SupplierParams.PageIndex,
+                SupplierParams.PageSize
+            );
+        }
     }
 }
