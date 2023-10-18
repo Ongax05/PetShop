@@ -1,3 +1,19 @@
+# Table of Contents
+
+- [Pet Shop API](#pet-shop-api)
+- [Project Structure](#project-structure)
+- [Database Structure](#database-structure)
+- [Custom Endpoints](#custom-endpoints)
+- [Endpoint Structure](#endpoint-structure)
+- [Special End Points](#special-end-points)
+  - [Breed](#breed)
+  - [Medicine](#medicine)
+  - [Owner](#owner)
+  - [Pet](#pet)
+  - [Supplier](#supplier)
+  - [Veterinarian](#veterinarian)
+- [Note](#Note)
+
 # Pet Shop API
 
 Welcome to the  ``Pet Shop API``, a comprehensive .NET Entity Framework project with a modular architecture that includes features like ``JWT authentication``, ``repository pattern``, ``API versioning``, ``rate limiting``, ``Serilog`` for logging, and ``built-in pagination for all GET endpoints``.
@@ -42,4 +58,99 @@ These tables are seamlessly integrated into a Unit of Work, simplifying transact
 ## Custom Endpoints
 In addition to the standard CRUD operations, the Pet Shop API is equipped with custom endpoints and methods that cater to specific client requirements. These custom functionalities are designed to meet the unique needs of our project and enhance the value of the API.
 
-#### **I will explain them all below:**
+## Endpoint Structure
+
+All endpoints within this API follow a consistent structure to maintain code organization and reusability. This structure consists of three key steps:
+
+### Interface Methods
+
+- First, you must define the methods that will be called on the endpoints in their respective interfaces. These methods outline the expected behavior of your endpoints.
+
+### Repository Implementation
+
+- Next, you should implement these methods in their respective repositories. The repositories act as the bridge between your application and the underlying data source (database). They are responsible for executing the data access operations.
+
+### Endpoint Usage
+
+- Finally, you need to utilize the methods from your repositories in the endpoint handlers. This ensures that the endpoint functionality is based on the methods defined in the interfaces and implemented in the repositories. This separation of concerns helps maintain clean, modular, and maintainable code.
+
+
+# Special End Points
+
+In this section, we will describe all the functions. The endpoints share the same structure as the base GET with pagination. The only variation is in the data returned by methods not covered by the GenericRepository or GenericInterface.
+
+## Breed
+
+```csharp
+Task<(IEnumerable<Breed> BreedWithHowManyPets, int Total)> GetHowManyPetsAreInTheBreed(int pageIndex, int pageSize);
+```
+
+The Breed Repository includes only one special method for retrieving information about the number of pets in a particular breed and a list of Breeds along with their respective lists of Pets.
+
+## Medicine 
+
+``` csharp
+Task<(IEnumerable<Medicine> registers, int totalRegisters)> GetMedicinesByLaboratory(int pageIndex, int pageSize,string LaboratoryName);
+
+Task<(IEnumerable<Medicine> registers, int totalRegisters)> GetMedicinesExpensiveThan(int pageIndex, int pageSize);
+
+Task RestMedicine (int MedicineId, int TotalSold);
+
+Task AddMedicine (int MedicineId, int TotalBought);
+```
+
+These are our medicine-related methods:
+
+1. **Filter by Medicine Field**: The first method allows you to filter our medicines by the field laboratort of the `Medicine` entity, to use this method, you must specify the laboratory name, and it will return the medicines associated with that laboratory.
+
+3. **Expensive Medicines**: The second method retrieves medicines that are priced higher than 50,000 COP.
+
+4. **Medicine Movements**: The third and fourth methods are used during medicine movements, for adding and removing medicines from the database.
+
+## Owner
+
+``` csharp
+Task<(IEnumerable<Owner> owners,int total)> OwnerWithPets (int pageIndex, int pageSize);
+```
+
+This method is straightforward. It involves adding a list of each owner, which contains their pets, using the EF method called `.Include`.
+
+## Pet 
+
+``` csharp
+Task<(IEnumerable<Pet> registers, int totalRegisters)> GetPetsBySpecies(int pageIndex, int pageSize,string species);
+
+Task<(IEnumerable<Pet> registers, int totalRegisters)> GetPetsByBreed(int pageIndex, int pageSize,string Breed);
+
+Task<(IEnumerable<Pet> registers, int totalRegisters)> GetPetsByAppointmentReason(int pageIndex, int pageSize,string Reason);
+
+Task<(IEnumerable<Pet> registers, int totalRegisters)> GetPetsByVeterinarian(int pageIndex, int pageSize,string VeterinarianName);
+```
+
+These are our pet-related methods:
+
+1. **Filter by Species**: The first method filters our pets by species and returns the filtered pets.
+
+2. **Filter by Breed**: The second method is similar to the first, with the only difference being that it filters pets by breed.
+
+3. **Filter by Appointment Reason**: The third method filters our pets by the reason for their past appointments.
+
+4. **Veterinarian Attendance**: The fourth method provides the pets attended to by a specific veterinarian
+
+## Supplier
+
+``` csharp
+Task<(IEnumerable<Supplier> suppliers, int totals)> GetWhoShells (int pageIndex, int pageSize,string medicineName);
+```
+
+This method returns all the suppliers who have sold the medicine specified in the parameters.
+
+## Veterinarian
+
+``` csharp
+Task<(IEnumerable<Veterinarian> registers, int totalRegisters)> GetVeterinariansBySpeciality(int pageIndex, int pageSize,string speciality);
+```
+
+This method returns all the veterinarians who have the speciality specified in the parameters.
+
+**Note:** This README is for informational purposes only and does not cover all implementation details. It was authored by [Ongax05](https://github.com/Ongax05).
