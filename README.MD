@@ -153,4 +153,24 @@ Task<(IEnumerable<Veterinarian> registers, int totalRegisters)> GetVeterinarians
 
 This method returns all the veterinarians who have the speciality specified in the parameters.
 
+
+### 1.1 Version
+
+Now, in addition to the standard CRUD operations, each controller in the Pet Shop API offers a 1.1 version of basic Getters. These 1.1 versions provide a simple way to retrieve data without pagination. To utilize these 1.1 version Getters in your requests, you must include a query parameter or a header parameter as follows:
+
+**Query Parameter**:
+To request data using the 1.1 version of the Getters, include a query parameter like this:
+```bash
+?version=1.1
+```
+
+**Header Parameter**:
+Alternatively, you can specify the version using a custom header parameter like this:
+
+```bash
+X-Version: 1.1
+```
+
+By providing the version information, you can access the simplified Getters for quick data retrieval without pagination. This feature enhances the flexibility of the API and allows you to choose between paginated and non-paginated data retrieval based on your specific needs.
+
 **Note:** This README is for informational purposes only and does not cover all implementation details. It was authored by [Ongax05](https://github.com/Ongax05).
