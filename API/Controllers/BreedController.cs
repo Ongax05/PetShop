@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [Authorize(Roles = "Employee")]
     public class BreedController : ApiBaseController
     {
@@ -44,6 +46,14 @@ namespace API.Controllers
                 BreedParams.PageIndex,
                 BreedParams.PageSize
             );
+        }
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public async Task<ActionResult<IEnumerable<BreedDto>>> Get1_1()
+        {
+            var registers = await _unitOfWork.Breed.GetAllAsync();
+            var BreedListDto = _mapper.Map<List<BreedDto>>(registers);
+            return BreedListDto;
         }
 
         [HttpPost]

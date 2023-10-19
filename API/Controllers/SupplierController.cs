@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     public class SupplierController : ApiBaseController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -39,6 +41,15 @@ namespace API.Controllers
                 SupplierParams.PageIndex,
                 SupplierParams.PageSize
             );
+        }
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public async Task<ActionResult<IEnumerable<SupplierDto>>> Get1_1()
+        {
+            var registers = await _unitOfWork.Supplier.GetAllAsync();
+            var SupplierListDto = _mapper.Map<List<SupplierDto>>(registers);
+            return SupplierListDto;
         }
 
         [HttpPost]

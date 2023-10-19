@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [Authorize(Roles = "Employee")]
     public class SpeciesController : ApiBaseController
     {
@@ -40,6 +42,15 @@ namespace API.Controllers
                 SpeciesParams.PageIndex,
                 SpeciesParams.PageSize
             );
+        }
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public async Task<ActionResult<IEnumerable<SpeciesDto>>> Get1_1()
+        {
+            var registers = await _unitOfWork.Species.GetAllAsync();
+            var SpeciesListDto = _mapper.Map<List<SpeciesDto>>(registers);
+            return SpeciesListDto;
         }
 
         [HttpPost]

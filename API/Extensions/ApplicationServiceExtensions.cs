@@ -20,7 +20,7 @@ public static class ApplicationServiceExtensions
         services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy", builder =>
-                builder.AllowAnyOrigin()    //WithOrigins("https://domain.com")
+                builder.AllowAnyOrigin() 
                     .WithMethods("GET")
                     .AllowAnyHeader());     //WithHeaders("accept","content-type")
         });

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [Authorize(Roles = "Employee")]
     public class MedicalTreatmentController : ApiBaseController
     {
@@ -40,6 +42,14 @@ namespace API.Controllers
                 MedicalTreatmentParams.PageIndex,
                 MedicalTreatmentParams.PageSize
             );
+        }
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public async Task<ActionResult<IEnumerable<MedicalTreatmentDto>>> Get1_1()
+        {
+            var registers = await _unitOfWork.MedicalTreatment.GetAllAsync();
+            var MedicalTreatmentListDto = _mapper.Map<List<MedicalTreatmentDto>>(registers);
+            return MedicalTreatmentListDto;
         }
 
         [HttpPost]

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [Authorize(Roles = "Employee")]
     public class OwnerController : ApiBaseController
     {
@@ -40,6 +42,14 @@ namespace API.Controllers
                 OwnerParams.PageIndex,
                 OwnerParams.PageSize
             );
+        }
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public async Task<ActionResult<IEnumerable<OwnerDto>>> Get1_1()
+        {
+            var registers = await _unitOfWork.Owner.GetAllAsync();
+            var OwnerListDto = _mapper.Map<List<OwnerDto>>(registers);
+            return OwnerListDto;
         }
 
         [HttpPost]

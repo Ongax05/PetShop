@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [Authorize(Roles = "Employee")]
     public class AppointmentController : ApiBaseController
     {
@@ -45,6 +47,15 @@ namespace API.Controllers
                 AppointmentParams.PageIndex,
                 AppointmentParams.PageSize
             );
+        }
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public async Task<ActionResult<IEnumerable<AppointmentDto>>> Get1_1()
+        {
+            var registers = await _unitOfWork.Appointment.GetAllAsync();
+            var AppointmentListDto = _mapper.Map<List<AppointmentDto>>(registers);
+            return AppointmentListDto;
         }
 
         [HttpPost]

@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 
 namespace API.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [Authorize(Roles = "Employee")]
     public class PetController : ApiBaseController
     {
@@ -41,6 +43,15 @@ namespace API.Controllers
                 PetParams.PageIndex,
                 PetParams.PageSize
             );
+        }
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public async Task<ActionResult<IEnumerable<PetDto>>> Get1_1()
+        {
+            var registers = await _unitOfWork.Pet.GetAllAsync();
+            var PetListDto = _mapper.Map<List<PetDto>>(registers);
+            return PetListDto;
         }
 
         [HttpPost]
